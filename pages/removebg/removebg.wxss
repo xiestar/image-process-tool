@@ -1,0 +1,158 @@
+/* removebg.wxss */
+.container {
+  padding: 30rpx;
+  box-sizing: border-box;
+  min-height: 100vh;
+  background: #f8f8f8;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header {
+  margin-bottom: 0;
+  width: 100%;
+  position: absolute;
+  top: 30rpx;
+  left: 0;
+  right: 0;
+  padding: 0 30rpx;
+  z-index: 1;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10rpx;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.tip-btn {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: #3cc51f;
+  color: #fff;
+  font-size: 28rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 16rpx;
+}
+
+.desc {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.upload-section {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  z-index: 2;
+}
+
+.upload-btn {
+  width: 240rpx;
+  height: 240rpx;
+  background: #fff;
+  border: 2rpx dashed #3cc51f;
+  border-radius: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  box-shadow: 0 4rpx 15rpx rgba(60, 197, 31, 0.1);
+}
+
+.upload-icon {
+  font-size: 80rpx;
+  color: #3cc51f;
+  line-height: 1;
+  margin-bottom: 20rpx;
+}
+
+.upload-text {
+  font-size: 28rpx;
+  color: #3cc51f;
+  font-weight: 500;
+}
+
+/* 有图片时的内容样式 */
+.content-with-image {
+  width: 100%;
+  padding-top: 120rpx;
+}
+
+.image-preview {
+  margin: 30rpx 0;
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05);
+}
+
+.preview-title {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 20rpx;
+}
+
+.image-preview image {
+  width: 100%;
+  max-height: 400rpx;
+  display: block;
+  margin: 0 auto;
+}
+
+.process-btn, .save-btn {
+  width: 100%;
+  height: 80rpx;
+  line-height: 80rpx;
+  background: #3cc51f;
+  color: #fff;
+  font-size: 30rpx;
+  border-radius: 40rpx;
+  margin: 30rpx 0;
+}
+
+.process-btn[disabled] {
+  background: #b2e1a1;
+  color: #fff;
+}
+
+.result-container {
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05);
+  margin-top: 30rpx;
+}
+
+.result-image-container {
+  background-image: linear-gradient(45deg, #f5f5f5 25%, transparent 25%),
+                    linear-gradient(-45deg, #f5f5f5 25%, transparent 25%),
+                    linear-gradient(45deg, transparent 75%, #f5f5f5 75%),
+                    linear-gradient(-45deg, transparent 75%, #f5f5f5 75%);
+  background-size: 20rpx 20rpx;
+  background-position: 0 0, 0 10rpx, 10rpx -10rpx, -10rpx 0rpx;
+  padding: 20rpx;
+  border-radius: 8rpx;
+}
+
+.result-image-container image {
+  width: 100%;
+  max-height: 400rpx;
+  display: block;
+  margin: 0 auto;
+} 

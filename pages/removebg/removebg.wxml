@@ -1,0 +1,42 @@
+<!--removebg.wxml-->
+<view class="container">
+  <view class="header">
+    <view class="title-row">
+      <view class="title">抠图去背景</view>
+      <view class="tip-btn" bindtap="showTip">?</view>
+    </view>
+    <view class="desc">去除图片背景，保留主体</view>
+  </view>
+
+  <!-- 没有选择图片时显示上传区域 -->
+  <view class="upload-section" wx:if="{{!imageUrl}}">
+    <view class="upload-btn" bindtap="chooseImage">
+      <view class="upload-icon">+</view>
+      <view class="upload-text">选择图片</view>
+    </view>
+  </view>
+
+  <!-- 有图片时显示内容 -->
+  <view class="content-with-image" wx:if="{{imageUrl}}">
+    <view class="image-preview">
+      <view class="preview-title">原图</view>
+      <image src="{{imageUrl}}" mode="aspectFit"></image>
+    </view>
+
+    <button class="process-btn" bindtap="removeBg" disabled="{{processing}}">
+      {{processing ? '处理中...' : '去除背景'}}
+    </button>
+
+    <block wx:if="{{showResult}}">
+      <view class="result-container">
+        <view class="preview-title">处理结果</view>
+        <view class="result-image-container">
+          <image src="{{resultImageUrl}}" mode="aspectFit"></image>
+        </view>
+        <button class="save-btn" bindtap="saveImage">保存到相册</button>
+      </view>
+    </block>
+  </view>
+
+  <canvas type="2d" id="resultCanvas" style="width:{{canvasWidth}}px; height:{{canvasHeight}}px; position: absolute; left: -9999px;"></canvas>
+</view> 

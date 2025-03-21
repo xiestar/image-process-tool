@@ -1,0 +1,49 @@
+<!--compress.wxml-->
+<view class="container">
+  <view class="header">
+    <view class="title">图片压缩</view>
+    <view class="desc">压缩图片体积，减少存储空间</view>
+  </view>
+
+  <!-- 没有选择图片时显示上传区域 -->
+  <view class="upload-section" wx:if="{{!imagePath}}">
+    <view class="upload-btn" bindtap="chooseImage">
+      <view class="upload-icon">+</view>
+      <view class="upload-text">选择图片</view>
+    </view>
+  </view>
+
+  <!-- 有图片时显示内容 -->
+  <view class="content-with-image" wx:if="{{imagePath}}">
+    <view class="image-preview">
+      <image src="{{imagePath}}" mode="widthFix" class="preview-img" style="width: 100%"></image>
+      <view class="image-info">
+        <view>原图尺寸：{{originalWidth}} x {{originalHeight}}</view>
+        <view>原图大小：{{originalSize}}</view>
+      </view>
+    </view>
+
+    <view class="compress-controls">
+      <slider min="10" max="100" value="{{quality}}" show-value bindchanging="onQualityChange" />
+      <view class="quality-text">压缩质量：{{quality}}%</view>
+    </view>
+
+    <view class="btn-row">
+      <button class="btn primary" bindtap="compressImage">压缩图片</button>
+      <button class="btn secondary" bindtap="resetImage">重新选择</button>
+    </view>
+
+    <view class="results" wx:if="{{compressedImagePath}}">
+      <view class="section-title">压缩结果</view>
+      <view class="image-preview">
+        <image src="{{compressedImagePath}}" mode="widthFix" class="preview-img" style="width: 100%"></image>
+        <view class="image-info">
+          <view>压缩后大小：{{compressedSize}}</view>
+          <view>压缩率：{{compressionRate}}%</view>
+        </view>
+      </view>
+      
+      <button class="btn primary" bindtap="saveCompressedImage">保存压缩图片</button>
+    </view>
+  </view>
+</view> 

@@ -1,0 +1,16 @@
+{
+  "name": "removeBgApi",
+  "version": "1.0.0",
+  "description": "调用remove.bg API去除图片背景",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3",
+    "got": "^11.8.3",
+    "form-data": "^4.0.0"
+  }
+} 

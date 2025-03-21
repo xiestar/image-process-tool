@@ -1,0 +1,48 @@
+<!--recognize.wxml-->
+<view class="container">
+  <view class="header">
+    <view class="title-row">
+      <view class="title">图片识别</view>
+      <view class="tip-btn" bindtap="showTip">?</view>
+    </view>
+    <view class="desc">智能识别图片内容</view>
+  </view>
+
+  <view class="type-tabs">
+    <view class="tab {{recognitionType === 'general' ? 'active' : ''}}" bindtap="changeType" data-type="general">物体识别</view>
+    <view class="tab {{recognitionType === 'ocr' ? 'active' : ''}}" bindtap="changeType" data-type="ocr">文字识别</view>
+    <view class="tab {{recognitionType === 'qrcode' ? 'active' : ''}}" bindtap="changeType" data-type="qrcode">扫码识别</view>
+    <view class="tab {{recognitionType === 'landmark' ? 'active' : ''}}" bindtap="changeType" data-type="landmark">地标识别</view>
+  </view>
+
+  <view class="upload-section" wx:if="{{!imageUrl}}">
+    <view class="upload-btn" bindtap="chooseImage">
+      <view class="upload-icon">+</view>
+      <view class="upload-text">选择图片</view>
+    </view>
+  </view>
+
+  <block wx:if="{{imageUrl}}">
+    <view class="image-preview">
+      <image src="{{imageUrl}}" mode="aspectFit"></image>
+    </view>
+
+    <view class="button-group">
+      <button class="recognize-btn" bindtap="startRecognize" disabled="{{recognizing}}">
+        {{recognizing ? '识别中...' : '开始识别'}}
+      </button>
+      <button class="reset-btn" bindtap="chooseImage">重新选择</button>
+    </view>
+
+    <block wx:if="{{showResult}}">
+      <view class="result-container">
+        <view class="result-title">识别结果</view>
+        
+        <!-- 通用识别结果 -->
+        <view class="ai-result">
+          <text class="ai-result-text">{{recognitionResult.text}}</text>
+        </view>
+      </view>
+    </block>
+  </block>
+</view> 

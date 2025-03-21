@@ -1,0 +1,133 @@
+<!--idphoto.wxml-->
+<view class="container">
+  <!-- 头部标题区域 -->
+  <view class="header">
+    <view class="title-row">
+      <view class="title">证件照制作</view>
+      <view class="tip-btn" bindtap="showTip">?</view>
+    </view>
+    <view class="desc">制作标准证件照，可选择不同尺寸和背景色</view>
+    <!-- 增加调试信息 -->
+    <view class="debug-info" style="font-size: 22rpx; color: #999; margin-top: 10rpx;">状态: {{currentStep}}</view>
+  </view>
+
+  <!-- 选择图片前的初始界面 -->
+  <view class="main-content" wx:if="{{!imageUrl}}">
+    <view class="type-tabs">
+      <view class="tab {{photoType === item.id ? 'active' : ''}}" 
+            wx:for="{{photoTypes}}" 
+            wx:key="id" 
+            bindtap="changePhotoType" 
+            data-type="{{item.id}}">
+        {{item.name}}
+      </view>
+    </view>
+    
+    <view class="color-selector">
+      <view class="color-title">背景颜色</view>
+      <view class="color-options">
+        <view class="color-item {{bgColor === color ? 'active' : ''}}" 
+              wx:for="{{commonColors}}" 
+              wx:for-item="color"
+              wx:key="index" 
+              bindtap="selectBgColor" 
+              data-color="{{color}}"
+              style="background-color: {{color}};">
+        </view>
+      </view>
+    </view>
+    
+    <!-- 提示信息 -->
+    <view class="feature-info">
+      <view class="feature-title">人像抠图</view>
+      <view class="feature-desc">系统会自动抠出人像并与所选背景颜色合成</view>
+    </view>
+
+    <view class="upload-section">
+      <view class="upload-btn" bindtap="chooseImage">
+        <view class="upload-icon">+</view>
+        <view class="upload-text">选择图片</view>
+      </view>
+      <view class="crop-guide">
+        <text>• 请选择清晰的正面照片</text>
+        <text>• 人像居中且面部完整</text>
+        <text>• 系统会自动抠出人像并合成背景</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 选择图片后的界面 -->
+  <block wx:if="{{imageUrl}}">
+    <!-- 证件照参数设置区 -->
+    <view class="settings-section">
+      <!-- 选择证件照类型 -->
+      <view class="type-tabs">
+        <view class="tab {{photoType === item.id ? 'active' : ''}}" 
+              wx:for="{{photoTypes}}" 
+              wx:key="id" 
+              bindtap="changePhotoType" 
+              data-type="{{item.id}}">
+          {{item.name}}
+        </view>
+      </view>
+      
+      <!-- 选择背景颜色 -->
+      <view class="color-selector">
+        <view class="color-title">背景颜色</view>
+        <view class="color-options">
+          <view class="color-item {{bgColor === color ? 'active' : ''}}" 
+                wx:for="{{commonColors}}" 
+                wx:for-item="color"
+                wx:key="index" 
+                bindtap="selectBgColor" 
+                data-color="{{color}}"
+                style="background-color: {{color}};">
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 原图预览区 -->
+    <view class="image-preview">
+      <view class="preview-title">原图</view>
+      <image src="{{imageUrl}}" mode="aspectFit" style="max-height: 300rpx; width: 100%;"></image>
+    </view>
+
+    <!-- 操作按钮区 -->
+    <view class="button-group">
+      <button class="process-btn" bindtap="generatePhoto" disabled="{{processing}}">
+        {{processing ? '处理中...' : '生成证件照'}}
+      </button>
+      <button class="reset-btn" bindtap="chooseImage">重新选择</button>
+    </view>
+
+    <!-- 结果显示区 -->
+    <view wx:if="{{showResult}}" class="result-container" id="resultArea">
+      <view class="preview-title">证件照结果</view>
+      
+      <!-- 结果图片显示 - 不再对整个容器应用背景颜色 -->
+      <view class="result-box">
+        <image 
+          src="{{resultImageUrl}}" 
+          mode="aspectFit" 
+          binderror="onImageError"
+          bindload="onImageLoad"
+        ></image>
+      </view>
+      
+      <view class="photo-info">
+        <text>当前规格: {{photoTypes[photoType === 'one_inch' ? 0 : 1].name}}</text>
+        <text>{{photoTypes[photoType === 'one_inch' ? 0 : 1].width}} × {{photoTypes[photoType === 'one_inch' ? 0 : 1].height}} 像素</text>
+      </view>
+      
+      <button class="save-btn" bindtap="savePhoto">保存到相册</button>
+    </view>
+  </block>
+
+  <!-- Canvas元素 -->
+  <canvas 
+    canvas-id="photoCanvas"
+    class="photo-canvas"
+    style="width:{{canvasWidth || 295}}px; height:{{canvasHeight || 413}}px; visibility:hidden;">
+  </canvas>
+</view> 
