@@ -12,10 +12,17 @@ Page({
     ],
     bgColor: '#ffffff', // 背景颜色
     commonColors: ['#ffffff', '#2e71b8', '#ff0000'],
-    currentStep: '准备就绪', // 用于调试
+    currentStep: '请选择尺寸和背景色，然后上传图片并点击生成按钮', // 用于调试
     removedBgImageUrl: '', // 抠图后的图片路径
     apiKey: 'BZqw5WiuEoCzJCvSwCZ6ZpYm', // 使用同样的API密钥
     useOriginalFallback: true // 如果抠图失败，使用原图作为备选
+  },
+
+  onLoad() {
+    // 设置初始状态提示
+    this.setData({
+      currentStep: '请选择尺寸和背景色，然后上传图片并点击生成按钮'
+    });
   },
 
   // 选择图片
@@ -31,7 +38,7 @@ Page({
           resultImageUrl: '',
           removedBgImageUrl: '',
           showResult: false,
-          currentStep: '已选择图片'
+          currentStep: '已选择图片，请点击"生成证件照"按钮处理'
         });
       }
     });
@@ -44,12 +51,8 @@ Page({
     
     this.setData({
       photoType: type,
-      bgColor: photoType.bgColor
-    }, () => {
-      // 如果已经生成了结果，切换类型后自动重新生成
-      if (this.data.showResult) {
-        this.generatePhoto();
-      }
+      bgColor: photoType.bgColor,
+      currentStep: `切换为${photoType.name}(${photoType.width}×${photoType.height})`
     });
   },
 
@@ -57,12 +60,8 @@ Page({
   selectBgColor(e) {
     const color = e.currentTarget.dataset.color;
     this.setData({
-      bgColor: color
-    }, () => {
-      // 如果已经生成了结果，更改背景色后自动重新生成
-      if (this.data.showResult) {
-        this.generatePhoto();
-      }
+      bgColor: color,
+      currentStep: `选择背景色: ${color}`
     });
   },
 
@@ -76,10 +75,16 @@ Page({
       return;
     }
 
+    // 获取当前选择的证件照类型
+    const photoType = this.data.photoTypes.find(item => item.id === this.data.photoType);
+    console.log('当前选择的证件照类型:', this.data.photoType, '尺寸:', photoType.width, 'x', photoType.height);
+
     this.setData({
       processing: true,
-      currentStep: '开始生成证件照',
-      showResult: false
+      currentStep: `开始生成${photoType.name}(${photoType.width}×${photoType.height})`,
+      showResult: false,
+      canvasWidth: photoType.width,
+      canvasHeight: photoType.height
     });
 
     wx.showLoading({
@@ -181,10 +186,11 @@ Page({
     
     this.setData({ 
       currentStep: this.data.removedBgImageUrl ? 
-        '开始合成抠图结果' : '开始处理原图' 
+        `开始合成${photoType.name}(${photoType.width}×${photoType.height})` : 
+        `开始处理原图为${photoType.name}(${photoType.width}×${photoType.height})` 
     });
     
-    // 使用简化的绘制方法
+    // 使用精确尺寸绘制方法
     this.drawWithExactSize(photoType, imageSource);
   },
 
@@ -201,7 +207,7 @@ Page({
       this.setData({
         canvasWidth: targetWidth,
         canvasHeight: targetHeight,
-        currentStep: '设置Canvas尺寸'
+        currentStep: `设置Canvas尺寸为${targetWidth}×${targetHeight}`
       });
       
       // 获取图片信息
@@ -268,7 +274,7 @@ Page({
           // 完成绘制
           ctx.draw(false, () => {
             this.setData({ 
-              currentStep: '绘制完成，准备导出',
+              currentStep: `绘制完成，准备导出${targetWidth}×${targetHeight}图片`,
               imageType: isRemovedBg ? '抠图结果' : '原图'
             });
             
@@ -292,7 +298,7 @@ Page({
   // 导出精确尺寸图片
   exportExactSizeImage(width, height) {
     try {
-      this.setData({ currentStep: '开始导出图片' });
+      this.setData({ currentStep: `开始导出${width}×${height}图片` });
       wx.canvasToTempFilePath({
         canvasId: 'photoCanvas',
         x: 0,
@@ -305,7 +311,7 @@ Page({
         quality: 1.0, // 使用最高质量
         success: res => {
           console.log('导出成功:', res.tempFilePath);
-          this.setData({ currentStep: '导出成功' });
+          this.setData({ currentStep: `导出成功: ${width}×${height}` });
           
           // 隐藏加载提示
           wx.hideLoading();
@@ -331,6 +337,18 @@ Page({
                 }
               }).exec();
           }, 300);
+
+          // 验证结果图片尺寸
+          wx.getImageInfo({
+            src: res.tempFilePath,
+            success: imgInfo => {
+              console.log('结果图片实际尺寸:', imgInfo.width, 'x', imgInfo.height);
+              if (imgInfo.width !== width || imgInfo.height !== height) {
+                console.warn('警告: 结果图片尺寸与目标尺寸不符!');
+                this.setData({ currentStep: `警告: 结果尺寸(${imgInfo.width}×${imgInfo.height})与目标尺寸(${width}×${height})不符` });
+              }
+            }
+          });
         },
         fail: err => {
           console.error('导出图片失败:', err);
@@ -391,7 +409,7 @@ Page({
   showTip() {
     wx.showModal({
       title: '证件照制作说明',
-      content: '1. 选择一寸照或二寸照尺寸\n2. 选择白色、蓝色或红色背景\n3. 上传清晰的正面照片，保持面部居中\n4. 点击生成按钮，系统会自动抠出人像并合成所需背景\n5. 照片按照所选规格精确裁剪\n6. 一寸照尺寸为295×413，二寸照为413×579',
+      content: '操作流程：\n1. 选择一寸照(295×413)或二寸照(413×579)尺寸\n2. 选择白色、蓝色或红色背景\n3. 上传清晰的正面照片，保持面部居中\n4. 点击"生成证件照"按钮，系统将开始处理\n5. 系统会自动抠出人像并合成所选背景\n6. 生成的证件照尺寸严格符合国家标准',
       showCancel: false
     });
   },
@@ -399,7 +417,13 @@ Page({
   // 图片加载成功
   onImageLoad(e) {
     console.log('结果图片加载成功');
-    this.setData({ currentStep: '结果图片加载成功' });
+    
+    // 获取当前选择的证件照类型
+    const photoType = this.data.photoTypes.find(item => item.id === this.data.photoType);
+    
+    this.setData({ 
+      currentStep: `结果图片加载成功: ${photoType.name}(${photoType.width}×${photoType.height})`
+    });
   },
   
   // 图片加载失败

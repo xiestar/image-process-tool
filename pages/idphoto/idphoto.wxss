@@ -176,9 +176,20 @@
 }
 
 .preview-title {
-  font-size: 28rpx;
-  color: #666;
-  margin-bottom: 20rpx;
+  font-size: 32rpx;
+  color: #444;
+  margin-bottom: 16rpx;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.photo-size-label {
+  font-size: 26rpx;
+  color: #3cc51f;
+  margin-top: 8rpx;
+  font-weight: normal;
 }
 
 .image-preview image {
@@ -237,21 +248,28 @@
   overflow: hidden;
   box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.1);
   text-align: center;
+  background-color: #f8f8f8;
+  line-height: 0;
 }
 
 .result-box image {
   display: block;
-  max-width: 100%;
-  max-height: 500rpx;
   object-fit: contain;
+  margin: 0;
+  padding: 0;
 }
 
 .photo-info {
-  display: flex;
-  justify-content: space-between;
   margin: 20rpx 0;
-  font-size: 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.photo-info text {
+  font-size: 26rpx;
   color: #666;
+  margin: 5rpx 0;
 }
 
 .main-content {
@@ -286,6 +304,10 @@
 .process-btn {
   flex: 1;
   margin: 0;
+  background: linear-gradient(135deg, #3cc51f, #2db400);
+  font-weight: 500;
+  letter-spacing: 2rpx;
+  box-shadow: 0 4rpx 12rpx rgba(60, 197, 31, 0.3);
 }
 
 .crop-guide {
@@ -342,7 +364,7 @@
 
 .two-inch-container {
   width: 600rpx; /* 约等于413px * 1.5缩放 */
-  height: 840rpx; /* 约等于579px * 1.5缩放，保持比例 */
+  height: 840rpx; /* 约等于579px * 1.6缩放，保持比例 */
   margin: 0 auto;
   position: relative;
 }
@@ -376,4 +398,50 @@
   font-size: 24rpx;
   color: #666;
   line-height: 1.4;
+}
+
+/* 标签样式 */
+.tab {
+  padding: 12rpx 24rpx;
+  background: #f8f8f8;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  color: #666;
+  margin-right: 15rpx;
+  transition: all 0.3s;
+}
+
+.tab.active {
+  background: #3cc51f;
+  color: white;
+  box-shadow: 0 2rpx 8rpx rgba(60, 197, 31, 0.3);
+}
+
+/* 操作提示区域 */
+.operation-tip {
+  background: #f0f9ed;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin: 16rpx 0;
+  width: 100%;
+  box-sizing: border-box;
+  border-left: 8rpx solid #3cc51f;
+}
+
+.tip-title {
+  font-size: 28rpx;
+  color: #3cc51f;
+  margin-bottom: 12rpx;
+  font-weight: 500;
+}
+
+.tip-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.tip-content text {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
 } 

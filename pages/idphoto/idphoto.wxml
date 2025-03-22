@@ -19,7 +19,7 @@
             wx:key="id" 
             bindtap="changePhotoType" 
             data-type="{{item.id}}">
-        {{item.name}}
+        {{item.name}} ({{item.width}}×{{item.height}})
       </view>
     </view>
     
@@ -67,7 +67,7 @@
               wx:key="id" 
               bindtap="changePhotoType" 
               data-type="{{item.id}}">
-          {{item.name}}
+          {{item.name}} ({{item.width}}×{{item.height}})
         </view>
       </view>
       
@@ -93,17 +93,30 @@
       <image src="{{imageUrl}}" mode="aspectFit" style="max-height: 300rpx; width: 100%;"></image>
     </view>
 
+    <!-- 增加操作提示区域 -->
+    <view class="operation-tip" wx:if="{{imageUrl && !processing}}">
+      <view class="tip-title">操作提示</view>
+      <view class="tip-content">
+        <text>1. 请先选择证件照类型和背景颜色</text>
+        <text>2. 确认设置无误后，点击"{{showResult ? '重新生成证件照' : '生成证件照'}}"按钮</text>
+        <text>3. 系统将按照所选参数处理图片，生成标准证件照</text>
+      </view>
+    </view>
+
     <!-- 操作按钮区 -->
     <view class="button-group">
       <button class="process-btn" bindtap="generatePhoto" disabled="{{processing}}">
-        {{processing ? '处理中...' : '生成证件照'}}
+        {{processing ? '处理中...' : (showResult ? '重新生成证件照' : '生成证件照')}}
       </button>
       <button class="reset-btn" bindtap="chooseImage">重新选择</button>
     </view>
 
     <!-- 结果显示区 -->
     <view wx:if="{{showResult}}" class="result-container" id="resultArea">
-      <view class="preview-title">证件照结果</view>
+      <view class="preview-title">
+        <text>证件照结果</text>
+        <text class="photo-size-label">{{photoTypes[photoType === 'one_inch' ? 0 : 1].name}} ({{photoTypes[photoType === 'one_inch' ? 0 : 1].width}}×{{photoTypes[photoType === 'one_inch' ? 0 : 1].height}})</text>
+      </view>
       
       <!-- 结果图片显示 - 不再对整个容器应用背景颜色 -->
       <view class="result-box">
@@ -112,12 +125,14 @@
           mode="aspectFit" 
           binderror="onImageError"
           bindload="onImageLoad"
+          style="width: {{photoTypes[photoType === 'one_inch' ? 0 : 1].width}}px; height: {{photoTypes[photoType === 'one_inch' ? 0 : 1].height}}px;"
         ></image>
       </view>
       
       <view class="photo-info">
-        <text>当前规格: {{photoTypes[photoType === 'one_inch' ? 0 : 1].name}}</text>
-        <text>{{photoTypes[photoType === 'one_inch' ? 0 : 1].width}} × {{photoTypes[photoType === 'one_inch' ? 0 : 1].height}} 像素</text>
+        <text>标准尺寸: {{photoTypes[photoType === 'one_inch' ? 0 : 1].width}} × {{photoTypes[photoType === 'one_inch' ? 0 : 1].height}} 像素</text>
+        <text wx:if="{{photoType === 'one_inch'}}">适用于: 身份证、护照、驾照等</text>
+        <text wx:else>适用于: 简历、证书、表格等</text>
       </view>
       
       <button class="save-btn" bindtap="savePhoto">保存到相册</button>
